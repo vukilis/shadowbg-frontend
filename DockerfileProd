@@ -1,0 +1,9 @@
+FROM node:16
+
+WORKDIR /shadowbg_frontend
+
+COPY /shadowbg-frontend/ /shadowbg_frontend/
+
+RUN npm install
+
+RUN npm run build

@@ -2,6 +2,7 @@
 import {useState, useRef, useEffect} from "react";
 import ProgressBar from "@badrap/bar-of-progress";
 import {FaSearch, FaMagnet} from "react-icons/fa";
+import Link from 'next/link';
 
 const progress = new ProgressBar({
   size: 2,
@@ -37,7 +38,7 @@ function readableFileSize(size) {
 async function handleSearch(setSearchResult, text, offset, setOffset) {
   if(text === "") return;
   progress.start();
-  const data = await fetchResults('/api/search?q='+encodeURIComponent(text)+(offset > 1 ? "&page="+offset : ""), progress);
+  const data = await fetchResults(process.env.NEXT_PUBLIC_API_URL+'/search?q='+encodeURIComponent(text)+(offset > 1 ? "&page="+offset : ""), progress);
   progress.finish();
   if (!data || data.error) {
     return;
@@ -56,7 +57,9 @@ export default function Home() {
   return (<>
     <div className="main mb-5">
       <div className="container">
-        <div className="logo"></div>
+        <Link href="/"> 
+          <div className="logo"></div>
+        </Link>
         <div className="input-group mb-3">
           <input type="text" className="form-control" ref={searchTextBox} placeholder="Keywords to search" aria-label="Search" id="search-text" onKeyPress={(e) =>{ if(e.which == 13) { handleSearch(setSearchResult, searchTextBox.current.value, 1, setSearchOffset)}}}/>
           <button className="btn btn-secondary" onClick={() => handleSearch(setSearchResult, searchTextBox.current.value, 1, setSearchOffset)} type="button" id="search-button"><FaSearch/></button>
